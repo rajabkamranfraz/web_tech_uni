@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User CRUD Operations</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f9fafb;
+      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 720px;
+    }
+
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: none;
+      background-color: #ffffff;
+    }
+
+    .card-header {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #111827;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    #usersList .card {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-control {
+      border-color: #e5e7eb;
+      border-radius: 6px;
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+      border-color: #9ca3af;
+    }
+
+    .btn {
+      border-radius: 6px !important;
+    }
+
+    .text-muted {
+      color: #6b7280 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container mt-5">
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">User Management</h2>
+      <p class="text-muted">Add, update, and remove users</p>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header">Add / Update User</div>
+      <div class="card-body">
+        <form id="createForm">
+          <div class="form-group mb-3">
+            <label for="createName">Name</label>
+            <input type="text" class="form-control" id="createName" required placeholder="Enter name">
+          </div>
+          <div class="form-group mb-3">
+            <label for="createEmail">Email</label>
+            <input type="email" class="form-control" id="createEmail" required placeholder="Enter email">
+          </div>
+          <div class="form-group mb-3">
+            <label for="createPhone">Phone</label>
+            <input type="text" class="form-control" id="createPhone" required placeholder="Enter phone number">
+          </div>
+          <div class="form-group mb-3">
+            <label for="createWebsite">Website</label>
+            <input type="text" class="form-control" id="createWebsite" placeholder="Enter website (optional)">
+          </div>
+          <button id="createBtn" type="submit" class="btn btn-success">Create</button>
+          <button id="clearBtn" class="btn btn-outline-secondary" style="display: none;">Clear</button>
+        </form>
+      </div>
+    </div>
+
+    <h4 class="mb-3">User List</h4>
+    <div id="usersList"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./jqcrud.js"></script>
+
+</body>
+</html>
