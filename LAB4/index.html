@@ -1,243 +1,473 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Checkout</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  </head>
-  <body class="bg-light">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    :root {
+      --primary: #6f42c1;
+      --secondary: #e83e8c;
+      --success: #20c997;
+      --light-bg: #f8f9fa;
+      --dark-text: #2d3748;
+    }
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--dark-text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .checkout-header {
+      background: var(--primary);
+      color: white;
+      border-radius: 0 0 25px 25px;
+      padding: 1.5rem 0;
+    }
+
+    .progress-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      margin-bottom: 8px;
+      z-index: 2;
+    }
+
+    .step-active .step-icon {
+      background-color: white;
+      color: var(--primary);
+    }
+
+    .step-completed .step-icon {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .form-section {
+      background-color: white;
+      border-radius: 15px;
+      padding: 1.8rem;
+      margin-bottom: 1.8rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    .section-title {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+    }
+
+    .payment-option {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .payment-option:hover {
+      border-color: var(--primary);
+    }
+
+    .payment-option.selected {
+      border-color: var(--primary);
+      background-color: rgba(111, 66, 193, 0.05);
+    }
+
+    .payment-icon {
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-right: 12px;
+    }
+
+    .order-summary {
+      background-color: white;
+      border-radius: 15px;
+      padding: 1.8rem;
+      border-top: 5px solid var(--primary);
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .summary-total {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--primary);
+    }
+
+    .product-image {
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-right: 1rem;
+      border: 1px solid #e9ecef;
+    }
+
+    .coupon-section {
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-weight: 600;
+    }
+
+    .btn-outline-primary {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .terms-check {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: rgba(0, 0, 0, 0.02);
+      border-radius: 10px;
+      border-left: 4px solid var(--success);
+    }
+
+    @media (max-width: 767.98px) {
+      .order-summary {
+        margin-top: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="checkout-header">
+    <div class="container">
+      <h1 class="text-center mb-4 fw-bold">Complete Your Purchase</h1>
+      <div class="progress-container">
+        <div class="row text-center">
+          <div class="col-3 progress-step step-completed">
+            <div class="step-icon"><i class="bi bi-cart3"></i></div>
+            <div class="step-label">Cart</div>
+          </div>
+          <div class="col-3 progress-step step-completed">
+            <div class="step-icon"><i class="bi bi-geo-alt"></i></div>
+            <div class="step-label">Address</div>
+          </div>
+          <div class="col-3 progress-step step-active">
+            <div class="step-icon"><i class="bi bi-credit-card"></i></div>
+            <div class="step-label">Payment</div>
+          </div>
+          <div class="col-3 progress-step">
+            <div class="step-icon"><i class="bi bi-check2-circle"></i></div>
+            <div class="step-label">Review</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
   <div class="container py-5">
-    <ul class="nav justify-content-center mb-4">
-      <li class="nav-item"><a class="nav-link disabled">Cart</a></li>
-      <li class="nav-item"><a class="nav-link disabled">Address</a></li>
-      <li class="nav-item"><a class="nav-link active">Payment</a></li>
-      <li class="nav-item"><a class="nav-link disabled">Review</a></li>
-    </ul>
-
     <div class="row g-4">
-      <div class="col-12 col-md-7">
+      <div class="col-12 col-lg-8">
         <form id="checkoutForm" novalidate>
-          <h4 class="mb-3">Shipping Information</h4>
-
-          <div class="row g-3">
-            <div class="col-sm-6">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="fullName" placeholder="Full Name" required>
-                <label for="fullName">Full name</label>
-                <div class="invalid-feedback">Full name must be at least 3 characters.</div>
+          <div class="form-section">
+            <h3 class="section-title"><i class="bi bi-truck"></i>Shipping Information</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-floating"> <input type="text" class="form-control" id="fullName"
+                    placeholder="Full Name"> <label for="fullName">Full Name</label>
+                  <div class="invalid-feedback">Full name must be at least 3 characters.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating"> <input type="email" class="form-control" id="email"
+                    placeholder="email@example.com"> <label for="email">Email Address</label>
+                  <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating"> <input type="tel" class="form-control" id="phone"
+                    placeholder="Phone Number"> <label for="phone">Phone Number</label>
+                  <div class="invalid-feedback">Phone must be digits only and at least 10 digits.</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating"> <input type="text" class="form-control" id="address"
+                    placeholder="1234 Main St"> <label for="address">Street Address</label>
+                  <div class="invalid-feedback">Address is required.</div>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-floating"> <input type="text" class="form-control" id="city" placeholder="City"> <label
+                    for="city">City</label>
+                  <div class="invalid-feedback">City is required.</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-floating"> <input type="text" class="form-control" id="postalCode"
+                    placeholder="Postal Code"> <label for="postalCode">Postal Code</label>
+                  <div class="invalid-feedback">Postal code must be 4–6 digits.</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-floating"> <select class="form-select" id="country">
+                    <option value="">Choose...</option>
+                    <option>Pakistan</option>
+                    <option>USA</option>
+                    <option>UK</option>
+                    <option>Canada</option>
+                    <option>Australia</option>
+                  </select> <label for="country">Country</label>
+                  <div class="invalid-feedback">Please select a country.</div>
+                </div>
+              </div>
+              <div class="col-12 mt-2">
+                <div class="form-check"> <input class="form-check-input" type="checkbox" id="sameAddress"> <label
+                    class="form-check-label" for="sameAddress">Billing address same as shipping</label> </div>
               </div>
             </div>
-
-            <div class="col-sm-6">
-              <div class="form-floating">
-                <input type="email" class="form-control" id="email" placeholder="email@example.com" required>
-                <label for="email">Email</label>
-                <div class="invalid-feedback">Enter a valid email address.</div>
+          </div>
+          <div class="form-section">
+            <h3 class="section-title"><i class="bi bi-wallet2"></i>Payment Method</h3>
+            <div class="my-3" id="paymentGroup">
+              <div class="payment-option selected">
+                <div class="form-check d-flex align-items-center">
+                  <input class="form-check-input me-3" type="radio" name="paymentMethod" id="credit" value="card"
+                    checked>
+                  <i class="bi bi-credit-card-2-front payment-icon"></i>
+                  <label class="form-check-label flex-grow-1" for="credit">Credit or Debit Card</label>
+                </div>
               </div>
+              <div class="payment-option">
+                <div class="form-check d-flex align-items-center">
+                  <input class="form-check-input me-3" type="radio" name="paymentMethod" id="cod" value="cod">
+                  <i class="bi bi-cash-coin payment-icon"></i>
+                  <label class="form-check-label flex-grow-1" for="cod">Cash on Delivery</label>
+                </div>
+              </div>
+              <div class="payment-option">
+                <div class="form-check d-flex align-items-center">
+                  <input class="form-check-input me-3" type="radio" name="paymentMethod" id="wallet" value="wallet">
+                  <i class="bi bi-phone payment-icon"></i>
+                  <label class="form-check-label flex-grow-1" for="wallet">Digital Wallet</label>
+                </div>
+              </div>
+              <div id="paymentError" class="invalid-feedback d-block" style="display:none;">Please select a payment
+                method.</div>
             </div>
 
-            <div class="col-12">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
-                <label for="address">Address</label>
-                <div class="invalid-feedback">Address is required.</div>
+            <div id="cardDetails">
+              <h5 class="mb-3">Card Details</h5>
+              <div class="row gy-3">
+                <div class="col-md-6 form-floating">
+                  <input type="text" class="form-control" id="cc-name" placeholder="Cardholder Name">
+                  <label for="cc-name">Cardholder Name</label>
+                  <div class="invalid-feedback">Cardholder name is required.</div>
+                </div>
+                <div class="col-md-6 form-floating">
+                  <input type="text" class="form-control" id="cc-number" placeholder="1234 5678 9012 3456">
+                  <label for="cc-number">Card Number</label>
+                  <div class="invalid-feedback">Enter a valid card number (13–19 digits).</div>
+                </div>
+                <div class="col-md-4 form-floating">
+                  <input type="text" class="form-control" id="cc-expiration" placeholder="MM/YY">
+                  <label for="cc-expiration">Expiry Date</label>
+                  <div class="invalid-feedback">Use MM/YY and a future date.</div>
+                </div>
+                <div class="col-md-4 form-floating">
+                  <input type="text" class="form-control" id="cc-cvv" placeholder="CVV">
+                  <label for="cc-cvv">CVV</label>
+                  <div class="invalid-feedback">CVV must be 3–4 digits.</div>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="col-md-6">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="city" placeholder="City" required>
-                <label for="city">City</label>
-                <div class="invalid-feedback">City is required.</div>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="form-floating">
-                <input type="text" class="form-control" id="postalCode" placeholder="Postal Code" required>
-                <label for="postalCode">Postal Code</label>
-                <div class="invalid-feedback">Postal code must be 4–6 digits.</div>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="form-floating">
-                <select class="form-select" id="country" required>
-                  <option value="">Choose...</option>
-                  <option>Pakistan</option>
-                  <option>USA</option>
-                  <option>UK</option>
-                </select>
-                <label for="country">Country</label>
-                <div class="invalid-feedback">Please select a country.</div>
-              </div>
-            </div>
-
-            <div class="form-check mb-4">
-              <input class="form-check-input" type="checkbox" id="sameAddress">
-              <label class="form-check-label" for="sameAddress">Billing same as shipping</label>
-            </div>
-
-            <h4 class="mb-3">Payment</h4>
-            <div class="my-3">
-              <div class="form-check">
-                <input id="credit" name="paymentMethod" type="radio" class="form-check-input" value="card" required>
-                <label class="form-check-label" for="credit">Credit card</label>
-              </div>
-              <div class="form-check">
-                <input id="cod" name="paymentMethod" type="radio" class="form-check-input" value="cod" required>
-                <label class="form-check-label" for="cod">Cash on Delivery</label>
-              </div>
-              <div class="form-check">
-                <input id="wallet" name="paymentMethod" type="radio" class="form-check-input" value="wallet" required>
-                <label class="form-check-label" for="wallet">Wallet</label>
-              </div>
-              <div class="invalid-feedback d-block" id="paymentError" style="display:none;">Select a payment method.</div>
-            </div>
-
-            <div class="row gy-3" id="cardDetails">
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="cc-name" placeholder="Cardholder Name">
-                <label for="cc-name">Cardholder name</label>
-                <div class="invalid-feedback">Cardholder name is required.</div>
-              </div>
-              <div class="col-md-6 form-floating">
-                <input type="text" class="form-control" id="cc-number" placeholder="1234-5678-9012-3456">
-                <label for="cc-number">Card number</label>
-                <div class="invalid-feedback">Card number is required.</div>
-              </div>
-              <div class="col-md-3 form-floating">
-                <input type="text" class="form-control" id="cc-expiration" placeholder="MM/YY">
-                <label for="cc-expiration">Expiry</label>
-                <div class="invalid-feedback">Expiry is required.</div>
-              </div>
-              <div class="col-md-3 form-floating">
-                <input type="text" class="form-control" id="cc-cvv" placeholder="CVV">
-                <label for="cc-cvv">CVV</label>
-                <div class="invalid-feedback">CVV is required.</div>
-              </div>
-            </div>
-
-            <div class="form-check mt-4">
+          <div class="terms-check">
+            <div class="form-check">
               <input class="form-check-input" type="checkbox" id="terms">
-              <label class="form-check-label" for="terms">I agree to the terms</label>
-              <div class="invalid-feedback">You must agree before submitting.</div>
+              <label class="form-check-label" for="terms">
+                I agree to the <a href="#" class="text-primary">Terms and Conditions</a> and <a href="#"
+                  class="text-primary">Privacy Policy</a>
+              </label>
+              <div class="invalid-feedback d-block" style="display:none;">You must agree before submitting.</div>
             </div>
-
-            <button class="w-100 btn btn-primary btn-lg mt-3" type="submit" id="submitBtn" disabled>Place Order</button>
+            <button id="submitBtn" class="w-100 btn btn-primary btn-lg mt-3" type="submit">Place Your Order</button>
           </div>
         </form>
       </div>
 
-      <div class="col-12 col-md-5">
-        <div class="card position-sticky top-0">
-          <div class="card-body">
-            <h5 class="card-title">Order Summary</h5>
-            <ul class="list-group mb-3">
-              <li class="list-group-item d-flex justify-content-between lh-sm">
-                <div>
-                  <h6 class="my-0">Nike Running Shoes</h6>
-                  <small class="text-muted">Qty: 2 × Rs 2,500</small>
-                </div>
-                <span class="text-muted">Rs 5,000</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between lh-sm">
-                <div>
-                  <h6 class="my-0">Sports T-shirt</h6>
-                  <small class="text-muted">Qty: 1 × Rs 1,200</small>
-                </div>
-                <span class="text-muted">Rs 1,200</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span>Shipping</span>
-                <strong>Rs 250</strong>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span>Tax</span>
-                <strong>Rs 100</strong>
-              </li>
-              <li class="list-group-item d-flex justify-content-between">
-                <span><strong>Total (PKR)</strong></span>
-                <strong>Rs 6,550</strong>
-              </li>
-            </ul>
+      <div class="col-12 col-lg-4">
+        <div class="order-summary position-sticky top-0">
+          <h3 class="section-title"><i class="bi bi-bag-check"></i>Order Summary</h3>
+          <div class="summary-item">
+            <div class="d-flex">
+              <div class="bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center me-3"
+                style="width: 70px; height: 70px;">
+                <i class="bi bi-shoe-prints text-primary fs-4"></i>
+              </div>
+              <div>
+                <h6 class="my-0">Nike Running Shoes</h6>
+                <small class="text-muted">Size: 10, Color: Blue</small>
+                <div class="text-muted">Qty: 2 × Rs 2,500</div>
+              </div>
+            </div>
+            <span class="text-muted">Rs 5,000</span>
+          </div>
+          <div class="summary-item">
+            <div class="d-flex">
+              <div class="bg-success bg-opacity-10 rounded d-flex align-items-center justify-content-center me-3"
+                style="width: 70px; height: 70px;">
+                <i class="bi bi-tshirt text-success fs-4"></i>
+              </div>
+              <div>
+                <h6 class="my-0">Sports T-shirt</h6>
+                <small class="text-muted">Size: M, Color: Black</small>
+                <div class="text-muted">Qty: 1 × Rs 1,200</div>
+              </div>
+            </div>
+            <span class="text-muted">Rs 1,200</span>
+          </div>
+          <div class="summary-item"><span>Subtotal</span><span>Rs 6,200</span></div>
+          <div class="summary-item"><span>Shipping</span><span>Rs 250</span></div>
+          <div class="summary-item"><span>Tax</span><span>Rs 100</span></div>
+          <div class="summary-item summary-total"><span>Total (PKR)</span><span>Rs 6,550</span></div>
+          <div class="coupon-section">
+            <h6 class="mb-2">Apply Promo Code</h6>
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code">
-              <button type="button" class="btn btn-secondary">Apply</button>
+              <input type="text" class="form-control" placeholder="Enter code">
+              <button class="btn btn-outline-primary" type="button">Apply</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
   <script>
-    $(document).ready(function() {
-      $('#cardDetails').show();
-      $('input[name="paymentMethod"]').change(function() {
+    $(document).ready(function () {
+
+      $('#cardDetails').hide();
+
+      $('input[name="paymentMethod"]').on('change', function () {
+        $('.payment-option').removeClass('selected');
+        $(this).closest('.payment-option').addClass('selected');
         if ($('#credit').is(':checked')) {
-          $('#cardDetails').slideDown();
+          $('#cardDetails').slideDown(150);
         } else {
-          $('#cardDetails').slideUp();
+          $('#cardDetails').slideUp(150);
         }
       });
 
-      $('#terms').change(function() {
-        $('#submitBtn').prop('disabled', !this.checked);
-      });
-
-      $('#checkoutForm').on('submit', function(e) {
+      $('#checkoutForm').on('submit', function (e) {
         e.preventDefault();
         let valid = true;
+        let firstError = null;
 
-        function invalidate(input) {
-          input.addClass('is-invalid').removeClass('is-valid');
-          if (valid) {
-            $('html, body').animate({ scrollTop: input.offset().top - 80 }, 400);
+        function check(condition, input) {
+          if (!condition) {
+            input.addClass('is-invalid').removeClass('is-valid');
+            if (!firstError) firstError = input;
             valid = false;
+          } else {
+            input.addClass('is-valid').removeClass('is-invalid');
           }
         }
-        function validate(input) {
-          input.removeClass('is-invalid').addClass('is-valid');
+
+        const name = $('#fullName');
+        const email = $('#email');
+        const phone = $('#phone');
+        const address = $('#address');
+        const city = $('#city');
+        const postal = $('#postalCode');
+        const country = $('#country');
+        const payment = $('input[name="paymentMethod"]:checked').length > 0;
+        const cardSelected = $('#credit').is(':checked');
+        const cardName = $('#cc-name');
+        const cardNum = $('#cc-number');
+        const exp = $('#cc-expiration');
+        const cvv = $('#cc-cvv');
+        const terms = $('#terms');
+
+        check(name.val().trim().length >= 3, name);
+        check(email.val().includes('@') && email.val().includes('.'), email);
+        check(/^\d{10,}$/.test(phone.val().trim()), phone);
+        check(address.val().trim() !== '', address);
+        check(city.val().trim() !== '', city);
+        check(/^\d{4,6}$/.test(postal.val().trim()), postal);
+        check(country.val() !== '', country);
+        check(payment, $('input[name="paymentMethod"]').first());
+
+        if (cardSelected) {
+          check(cardName.val().trim() !== '', cardName);
+          check(/^\d{13,19}$/.test(cardNum.val().replace(/\s|-/g, '')), cardNum);
+          check(/^\d{2}\/\d{2}$/.test(exp.val().trim()), exp);
+          check(/^\d{3,4}$/.test(cvv.val().trim()), cvv);
         }
 
-        let name = $('#fullName'), email = $('#email'), address = $('#address'),
-            city = $('#city'), postal = $('#postalCode'), country = $('#country'),
-            payment = $('input[name="paymentMethod"]:checked').val(),
-            cardName = $('#cc-name'), cardNum = $('#cc-number'),
-            exp = $('#cc-expiration'), cvv = $('#cc-cvv'), terms = $('#terms');
+        check(terms.is(':checked'), terms);
 
-        if (name.val().trim().length < 3) invalidate(name); else validate(name);
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.val())) invalidate(email); else validate(email);
-        if (address.val().trim() === '') invalidate(address); else validate(address);
-        if (city.val().trim() === '') invalidate(city); else validate(city);
-        if (!/^\d{4,6}$/.test(postal.val())) invalidate(postal); else validate(postal);
-        if (country.val() === '') invalidate(country); else validate(country);
-
-        if (!payment) { $('#paymentError').show(); valid = false; } 
-        else { $('#paymentError').hide(); }
-
-        if (payment === 'card') {
-          if (cardName.val().trim() === '') invalidate(cardName); else validate(cardName);
-          if (cardNum.val().trim() === '') invalidate(cardNum); else validate(cardNum);
-          if (exp.val().trim() === '') invalidate(exp); else validate(exp);
-          if (cvv.val().trim() === '') invalidate(cvv); else validate(cvv);
-        } else {
-          $('#cardDetails input').removeClass('is-invalid is-valid');
+        if (!valid) {
+          $('html, body').animate({ scrollTop: firstError.offset().top - 100 }, 400);
+          return;
         }
 
-        if (!terms.is(':checked')) invalidate(terms); else validate(terms);
+        alert('Form submitted successfully!');
+      });
 
-        if (valid) {
-          alert('Form submitted successfully!');
-        }
+      $('#checkoutForm input, #checkoutForm select').on('input change', function () {
+        $(this).removeClass('is-invalid');
       });
     });
   </script>
-  </body>
+
+</body>
+
 </html>
